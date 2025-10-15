@@ -1,0 +1,50 @@
+[package]
+name = "md2pdf"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A professional CLI tool for converting Markdown files to PDF with smart page breaks"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/md2pdf"
+readme = "README.md"
+keywords = ["markdown", "pdf", "converter", "cli"]
+categories = ["command-line-utilities", "text-processing"]
+
+[dependencies]
+# CLI argument parsing
+clap = { version = "4.5", features = ["derive", "cargo"] }
+
+# Markdown parsing
+pulldown-cmark = "0.11"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# PDF generation via headless Chrome
+headless_chrome = "1.0"
+
+# Logging
+env_logger = "0.11"
+log = "0.4"
+
+# File system operations
+walkdir = "2.5"
+
+# URL encoding for data URLs
+urlencoding = "2.1"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.1"
+tempfile = "3.10"
+
+[[bin]]
+name = "md2pdf"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

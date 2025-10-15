@@ -1,0 +1,16 @@
+/target
+*.claude/
+*.mistral/
+*.llama/
+*.gpt4all/
+*.pycache/
+
+CLAUDE.md
+MISTRAL.md
+LLAMA.md
+GPT4ALL.md
+
+*.css
+
+
+
