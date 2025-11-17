@@ -105,7 +105,18 @@ pub fn convert_markdown_to_pdf(
     output_path: &Path,
     options: &ConversionOptions,
 ) -> Result<()> {
-    info!("Starting conversion: {} -> {}", input_path.display(), output_path.display());
+    info!(
+        "Starting conversion: {} -> {}",
+        input_path.display(),
+        output_path.display()
+    );
+
+    let html_title = match output_path.file_stem() {
+        Some(stem) => stem.to_string_lossy().to_string(),
+        None => "Document".to_string(),
+    };
+    // .and_then(|s| s.to_str())
+    // .unwrap_or("Document");
 
     // Step 1: Read and validate markdown file
     debug!("Reading markdown file: {}", input_path.display());
@@ -125,7 +136,7 @@ pub fn convert_markdown_to_pdf(
 
     // Step 4: Generate complete HTML document
     debug!("Generating complete HTML document");
-    let full_html = template::generate_html(&html_content, &css);
+    let full_html = template::generate_html(&html_content, &css, &html_title);
 
     // Step 5: Prepare output path
     debug!("Preparing output path: {}", output_path.display());
@@ -182,9 +193,7 @@ pub fn convert_multiple_files(
 ) -> Vec<Result<()>> {
     conversions
         .iter()
-        .map(|(input, output)| {
-            convert_markdown_to_pdf(input.as_ref(), output.as_ref(), options)
-        })
+        .map(|(input, output)| convert_markdown_to_pdf(input.as_ref(), output.as_ref(), options))
         .collect()
 }
 
@@ -220,11 +229,7 @@ mod tests {
         std::fs::copy(temp_file.path(), &temp_path).unwrap();
 
         let options = ConversionOptions::default();
-        let result = convert_markdown_to_pdf(
-            &temp_path,
-            Path::new("output.txt"),
-            &options,
-        );
+        let result = convert_markdown_to_pdf(&temp_path, Path::new("output.txt"), &options);
 
         std::fs::remove_file(temp_path).unwrap();
         assert!(result.is_err());

@@ -281,14 +281,14 @@ body > h1:first-child {
 "#;
 
 /// Generate complete HTML document from content and CSS
-pub fn generate_html(content: &str, css: &str) -> String {
+pub fn generate_html(content: &str, css: &str, html_title: &str) -> String {
     format!(
         r#"<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown to PDF</title>
+    <title>{}</title>
     <style>
 {}
     </style>
@@ -297,7 +297,7 @@ pub fn generate_html(content: &str, css: &str) -> String {
 {}
 </body>
 </html>"#,
-        css, content
+        html_title, css, content
     )
 }
 
@@ -327,7 +327,8 @@ mod tests {
     fn test_generate_html() {
         let content = "<h1>Test</h1><p>Content</p>";
         let css = "body { color: red; }";
-        let html = generate_html(content, css);
+        let html_title = "Test Document";
+        let html = generate_html(content, css, html_title);
 
         assert!(html.contains("<!DOCTYPE html>"));
         assert!(html.contains(content));
